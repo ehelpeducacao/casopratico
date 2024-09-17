@@ -10,12 +10,6 @@ os.environ['DB_PASSWORD'] = 'hdzvzutlssuozdonhflhwyjm'
 
 
 # COMMAND ----------
-
-spark = SparkSession.builder \
-    .appName("Postgres to Delta") \
-    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
-    .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
-    .getOrCreate()
     
 host = os.getenv('DB_HOST')
 database = os.getenv('DB_DATABASE')
