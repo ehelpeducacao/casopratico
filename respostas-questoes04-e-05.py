@@ -21,8 +21,8 @@ offices_df = spark.table("hive_metastore.default.offices")
 # DBTITLE 1,Resposta (a): Qual país possui a maior quantidade de itens cancelados?
 
 df_itens_cancelados = orders_df.filter(orders_df.status == "Cancelled") \
-    .join(orderdetails_df, "order_number") \
-    .join(customers_df, "customer_number") \
+    .case(orderdetails_df, "order_number") \
+    .case(customers_df, "customer_number") \
     .groupBy("country") \
     .count() \
     .withColumnRenamed("count", "qnt_itens_cancelados") \
@@ -31,7 +31,7 @@ df_itens_cancelados = orders_df.filter(orders_df.status == "Cancelled") \
 
 df_itens_cancelados.show()
 
-df_itens_cancelados.write.format("delta").mode("overwrite").save("/mnt/join/delta/itens_cancelados")
+df_itens_cancelados.write.format("delta").mode("overwrite").save("/mnt/case/delta/itens_cancelados")
 
 # COMMAND ----------
 
@@ -39,9 +39,9 @@ df_itens_cancelados.write.format("delta").mode("overwrite").save("/mnt/join/delt
 df_order_shipped = orders_df.filter((orders_df.status == "Shipped") & (f.year(orders_df.order_date) == 2005))
 
 df_faturamento_lp_shipped = df_order_shipped \
-    .join(orderdetails_df, "order_number") \
-    .join(products_df, "product_code") \
-    .join(product_lines_df, "product_line") \
+    .case(orderdetails_df, "order_number") \
+    .case(products_df, "product_code") \
+    .case(product_lines_df, "product_line") \
     .groupBy("product_line") \
     .agg(f.sum(f.col("quantity_ordered") * f.col("price_each")).alias("faturamento")) \
     .orderBy(f.col("faturamento").desc()) \
@@ -49,13 +49,13 @@ df_faturamento_lp_shipped = df_order_shipped \
 
 df_faturamento_lp_shipped.show()
 
-df_faturamento_lp_shipped.write.format("delta").mode("overwrite").save("/mnt/join/delta/faturamento_lp_shipped")
+df_faturamento_lp_shipped.write.format("delta").mode("overwrite").save("/mnt/case/delta/faturamento_lp_shipped")
 
 # COMMAND ----------
 
 # DBTITLE 1,c.	Traga na consulta o Nome, sobrenome e e-mail dos vendedores do Japão, lembrando que o local-part do e-mail deve estar mascarado.
 df_vendedores_japao = employees_df \
-    .join(offices_df, "office_code") \
+    .case(offices_df, "office_code") \
     .filter(offices_df.country == "Japan") \
     .select(
         "first_name", 
@@ -65,5 +65,5 @@ df_vendedores_japao = employees_df \
 
 df_vendedores_japao.show()
 
-df_vendedores_japao.write.format("delta").mode("overwrite").save("/mnt/join/delta/vendedores_japao")
+df_vendedores_japao.write.format("delta").mode("overwrite").save("/mnt/case/delta/vendedores_japao")
 
