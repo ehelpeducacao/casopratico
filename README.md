@@ -1,10 +1,10 @@
-# Caso Prático JOIN
+# Caso Prático Database Type Ecommerce
 
 ## Visão Geral
 
 Este caso prático fornece uma solução baseada em PySpark para analisar diversas métricas de negócios usando dados de um banco de dados PostgreSQL. A análise foi realizada no Databricks, utilizando o Delta Lake para armazenamento e manipulação dos dados.
 
-OS dados extraídos do PostgreSQL estão no notebook `extract` e as respostas para os questionamentos práticos no notebook `respostas-questoes04-e-05`
+OS dados extraídos do PostgreSQL estão no notebook `extract tables` e as respostas para os questionamentos práticos no notebook `respostas-questoes04-e-05`
 
 ### Objetivos
 1. Realizar a ingestão das tabelas do Database Type Ecommerce no formato .parquet (1 arquivo por tabela) usando PySpark
