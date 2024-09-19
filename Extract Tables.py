@@ -2,12 +2,6 @@
 from pyspark.sql.utils import AnalysisException
 import os
 
-os.environ['DB_HOST'] = 'psql-mock-database-cloud.postgres.database.azure.com'
-os.environ['DB_DATABASE'] = 'ecom1692155331663giqokzaqmuqlogbu'
-os.environ['DB_PORT'] = '5432'
-os.environ['DB_USERNAME'] = 'eolowynayhvayxbhluzaqxfp@psql-mock-database-cloud'
-os.environ['DB_PASSWORD'] = 'hdzvzutlssuozdonhflhwyjm'
-
 
 # COMMAND ----------
     
@@ -48,7 +42,7 @@ for table in table_names:
     try:
         table_df = spark.read.jdbc(url=url, table=table, properties=properties)
         table_df = table_df.repartition(1)
-        delta_path = f"/mnt/join/delta/{table}"  
+        delta_path = f"/mnt/case/delta/{table}"  
         table_df.write.format("delta").mode("overwrite").save(delta_path)
         spark.sql(f"CREATE TABLE IF NOT EXISTS {table} USING DELTA LOCATION '{delta_path}'")
         print(f"Tabela {table} exportada para Delta Lake em {delta_path}")
