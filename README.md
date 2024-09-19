@@ -62,7 +62,7 @@ for table in table_names:
     try:
         table_df = spark.read.jdbc(url=url, table=table, properties=properties)
         table_df = table_df.repartition(1)
-        delta_path = f"/mnt/join/delta/{table}"  
+        delta_path = f"/mnt/case/delta/{table}"  
         table_df.write.format("delta").mode("overwrite").save(delta_path)
         spark.sql(f"CREATE TABLE IF NOT EXISTS {table} USING DELTA LOCATION '{delta_path}'")
         print(f"Tabela {table} exportada para Delta Lake em {delta_path}")
@@ -92,7 +92,7 @@ df_itens_cancelados = orders_df.filter(orders_df.status == "Cancelled") \
 
 df_itens_cancelados.show()
 
-df_itens_cancelados.write.format("delta").mode("overwrite").save("/mnt/join/delta/itens_cancelados")
+df_itens_cancelados.write.format("delta").mode("overwrite").save("/mnt/case/delta/itens_cancelados")
 ```
 
 ### b. Qual o faturamento da linha de produto mais vendido, considere os pedidos com status 'Shipped', cujo pedido foi realizado no ano de 2005?
@@ -116,7 +116,7 @@ df_faturamento_lp_shipped = df_order_shipped \
 
 df_faturamento_lp_shipped.show()
 
-df_faturamento_lp_shipped.write.format("delta").mode("overwrite").save("/mnt/join/delta/faturamento_lp_shipped")
+df_faturamento_lp_shipped.write.format("delta").mode("overwrite").save("/mnt/case/delta/faturamento_lp_shipped")
 ```
 
 
@@ -139,5 +139,5 @@ df_vendedores_japao = employees_df \
 
 df_vendedores_japao.show()
 
-df_vendedores_japao.write.format("delta").mode("overwrite").save("/mnt/join/delta/vendedores_japao")
+df_vendedores_japao.write.format("delta").mode("overwrite").save("/mnt/case/delta/vendedores_japao")
 ```
